@@ -1,4 +1,4 @@
-from flask import Flask,jsonify
+from flask import Flask,jsonify,request
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -26,6 +26,22 @@ def index():
         'status':True,
         'content':'sevidor activo'
     }
+    return jsonify(context)
+
+@app.route('/tarea',methods=['POST'])
+def set_tarea():
+    descripcion = request.json['descripcion']
+    estado = request.json['estado']
+    
+    nueva_tarea = Tarea(descripcion,estado)
+    db.session.add(nueva_tarea)
+    db.session.commit()
+    
+    context = {
+        'status':True,
+        'content':'registro exitoso'
+    }
+    
     return jsonify(context)
 
 if __name__ == "__main__":
