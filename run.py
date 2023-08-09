@@ -44,5 +44,29 @@ def set_tarea():
     
     return jsonify(context)
 
+@app.route('/tarea',methods=['GET'])
+def get_tarea():
+    data = Tarea.query.all() #select * from tarea
+    print(data)
+    #serializar
+    lista = []
+    for d in data:
+        dic_data = {
+            'descripcion':d.descripcion
+        }
+        lista.append(dic_data)
+        
+    print(lista)
+    
+    context = {
+        'status':True,
+        'content':lista
+    }
+    
+    return jsonify(context)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
+    
+
