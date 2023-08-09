@@ -98,6 +98,21 @@ def update_tarea(id):
     
     return jsonify(context)
 
+@app.route('/tarea/<id>',methods=['DELETE'])
+def delete_tarea(id):
+    del_tarea = Tarea.query.get(id)
+    db.session.delete(del_tarea)
+    db.session.commit()
+    
+    data_schema = TareaSchema()
+    
+    context = {
+        'status':True,
+        'content':data_schema.dump(del_tarea)
+    }
+    
+    return jsonify(context)
+
 
 
 if __name__ == "__main__":
