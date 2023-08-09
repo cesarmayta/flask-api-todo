@@ -32,7 +32,7 @@ db.create_all()
 def index():
     context = {
         'status':True,
-        'content':'sevidor activo'
+        'content':'servidor activo'
     }
     return jsonify(context)
 
@@ -45,9 +45,11 @@ def set_tarea():
     db.session.add(nueva_tarea)
     db.session.commit()
     
+    data_schema = TareaSchema()
+    
     context = {
         'status':True,
-        'content':'registro exitoso'
+        'content':data_schema.dump(nueva_tarea)
     }
     
     return jsonify(context)
@@ -57,6 +59,18 @@ def get_tarea():
     data = Tarea.query.all() #select * from tarea
     #serializar
     data_schema = TareaSchema(many=True)
+    
+    context = {
+        'status':True,
+        'content':data_schema.dump(data)
+    }
+    
+    return jsonify(context)
+
+@app.route('/tarea/<id>',methods=['GET'])
+def get_tarea_by_id(id):
+    data = Tarea.query.get(id)
+    data_schema = TareaSchema()
     
     context = {
         'status':True,
