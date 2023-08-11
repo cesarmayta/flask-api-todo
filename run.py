@@ -1,8 +1,10 @@
 from flask import Flask,jsonify,request
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 app.app_context().push()
 
@@ -86,6 +88,22 @@ def update_tarea(id):
     
     update_tarea = Tarea.query.get(id)
     update_tarea.descripcion = descripcion
+    update_tarea.estado = estado
+    db.session.commit()
+    
+    data_schema = TareaSchema()
+    
+    context = {
+        'status':True,
+        'content':data_schema.dump(update_tarea)
+    }
+    
+    return jsonify(context)
+
+@app.route('/tarea/<id>',methods=['PATCH'])
+def update_tarea_status(id):
+    estado = request.json['estado']
+    update_tarea = Tarea.query.get(id)
     update_tarea.estado = estado
     db.session.commit()
     
